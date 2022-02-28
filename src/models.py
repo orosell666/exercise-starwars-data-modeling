@@ -12,11 +12,17 @@ class People(Base):
     __tablename__ = 'people'
     # Here we define columns for the table person
     # Notice that each column is also a normal Python instance attribute.
-    id = Column(Integer, primary_key=True)
+    id = __tablename__ = 'people'
     name = Column(String(250), nullable=False)
     homeworld = column(string(20),ForeignKey('planet.id'))
     starships = column(string(30),ForeignKey('starship.id'))
     children = relationship("planets")
+
+class PeopleFav(Base):
+    __tablename__ = 'peopleFav'
+
+    id = Column(Integer, primary_key=True)
+
 
 class Planets(Base):
     __tablename__ = 'planets'
@@ -31,11 +37,23 @@ class Planets(Base):
     People_ID= Column(Integer, ForeignKey('people.id'))
     parent = relationship("people")
 
+class PlanetFav(Base):
+    __tablename__ = 'planetFav'
+
+    id = Column(Integer, primary_key=True)
+
+
+
 class Starships(Base):
     __tablename__ = 'starships'
     id = Column(Integer, primary_key=True)
     name = Column (String(40))
     model = Column(String(40))
+
+class StarshipFav(Base):
+    __tablename__ = 'starshipFav'
+
+    id = Column(Integer, primary_key=True)
 
 class Vehicles(Base):
     __tablename__ = 'vehicles'
@@ -44,13 +62,18 @@ class Vehicles(Base):
     name = Column(String(40))
     model = Column(String(40))
 
+class VehicleFav (Base):
+    __tablename__ = 'vehicleFav'
+
+    id = Column(Integer, primary_key=True)
+
+
+
+
 class Favourites(Base) :
     __tablename__ = 'favourites'
     id = Column(Integer, primary_key=True)
-    planet = Column(String (40), ForeignKey('planet.id'))
-    people = Column(String(40),ForeignKey('people.id'))
-    vehicles = Column(String(40),ForeignKey('vehicles.id'))
-    starship = Column(String(40), ForeignKey('starship.id') )
+    
 
 
 
