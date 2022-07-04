@@ -16,12 +16,7 @@ class User(Base):
     password = Column(String(80), unique=False, nullable=False)
     favorites = relationship("Favorite", backref = "user")
 
-    def serialize(self):
-        return {
-            "id": self.id,
-            "email": self.email,
-        }
-
+   
 
 class People(Base):
     __tablename__ = 'people'
@@ -36,24 +31,12 @@ class People(Base):
     eye_color = Column(String(15))
     birth_year = Column(String(10))
     gender = Column (String(15))
-    homeworld = column(string(20),ForeignKey('planet.id'))
-    starships = column(string(30),ForeignKey('starship.id'))
+    homeworld = Column(String(20),ForeignKey('planet.id'))
+    starships = Column(String(30),ForeignKey('starship.id'))
 
     children = relationship("planets")
 
-     def serialize(self):
-        return {     
-            "name": self.name,
-            "height": self.height,
-            "mass": self.mass,
-            "hair_color": self.hair_color,
-            "skin_color": self.skin_color,
-            "eye_color": self.eye_color,
-            "birth_year":self.birth_year,
-            "gender": self.gender,
-            "homeworld": self.homeworld,
-            "starships": self.starship
-        }
+     
 
 
 class PeopleFav(Base):
@@ -74,16 +57,7 @@ class Planets(Base):
 
     parent = relationship("people")
 
-    def serialize(self):
-        return {     
-            "name": self.name,
-            "id": self.id,
-            "diameter": self.diameter,
-            "population": self.population,
-            "climate": self.climate,
-            "water": self.climate
-        }
-
+    
 class PlanetFav(Base):
     __tablename__ = 'planetFav'
 
@@ -109,21 +83,7 @@ class Starships(Base):
 
     parent = relationship("people")
 
-    def serialize(self):
-        return {     
-            "name": self.name,
-            "id": self.id,
-            "model": self.model,
-            "manufacturer": self.manufacturer,
-            "cost_in_credits": self.cost_in_credits,
-            "lenght": self.lenght,
-            "max_atmosphering_speed": self.max_atmosphering_speed,
-            "crew": self.crew,
-            "passengers": self.passengers,
-            "cargo_capacity": self.cargo_capacity,
-            "consumables": self.consumables,
-            "hyperdrive_rating": self.hyperdrive_rating,
-        }
+    
 
 
 
@@ -134,20 +94,13 @@ class StarshipFav(Base):
 
 
 class Favourites(Base) :
-     __tablename__="favorite"
+    __tablename__="favorite"
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey('user.id'))
     people_id = Column(Integer, ForeignKey('people.id'))
     planet_id = Column(Integer, ForeignKey('planet.id'))
    
-    def serialize(self):
-        people = People.get_by_id(self.people_id)
-        return {
-            "id": self.id,
-            "user_id": self.user_id,
-            "people_id": self.people_id,
-            "planet_id": self.planet_id,
-        }
+    
     
 
 
