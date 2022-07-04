@@ -13,7 +13,8 @@ class User(Base):
 
     id = Column(Integer, primary_key=True)
     email = Column(String(120), unique=True, nullable=False)
-    password = Column(String(80), unique=False, nullable=False)
+    password = Column(String(80), unique=True, nullable=False)
+
     favorites = relationship("Favorite", backref = "user")
 
    
@@ -34,17 +35,13 @@ class People(Base):
     homeworld = Column(String(20),ForeignKey('planet.id'))
     starships = Column(String(30),ForeignKey('starship.id'))
 
-    children = relationship("planets")
+    planets = relationship("Planets")
+    favorites = relationship("Favorite", backref = "user")
+    user_id = Column(Integer, ForeignKey('user.id'))
+    planet_id = Column(Integer, ForeignKey('planets.id'))
+    starship_id = Column(Integer, ForeignKey('starships.id'))
 
      
-
-
-class PeopleFav(Base):
-    __tablename__ = 'peopleFav'
-
-    id = Column(Integer, primary_key=True)
-
-
 class Planets(Base):
     __tablename__ = 'planets'
    
@@ -55,14 +52,11 @@ class Planets(Base):
     climate = Column(String(50))
     water = Column (String(40))
 
-    parent = relationship("people")
-
-    
-class PlanetFav(Base):
-    __tablename__ = 'planetFav'
-
-    id = Column(Integer, primary_key=True)
-
+    people = relationship("People")
+    favorites = relationship("Favorite", backref = "planets")
+    user_id = Column(Integer, ForeignKey('user.id'))
+    people_id = Column(Integer, ForeignKey('people.id'))
+    starship_id = Column(Integer, ForeignKey('starships.id'))
 
 
 class Starships(Base):
@@ -81,24 +75,22 @@ class Starships(Base):
     consumables = Column(String(40))
     hyperdrive_rating = Column(Integer)
 
-    parent = relationship("people")
-
-    
-
-
-
-class StarshipFav(Base):
-    __tablename__ = 'starshipFav'
-
-    id = Column(Integer, primary_key=True)
+    people = relationship("People")
+    favorites = relationship("Favorite", backref = "starships")
+    user_id = Column(Integer, ForeignKey('user.id'))
+    people_id = Column(Integer, ForeignKey('people.id'))
+    planet_id = Column(Integer, ForeignKey('planets.id'))
 
 
 class Favourites(Base) :
     __tablename__="favorite"
+
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey('user.id'))
     people_id = Column(Integer, ForeignKey('people.id'))
-    planet_id = Column(Integer, ForeignKey('planet.id'))
+    planet_id = Column(Integer, ForeignKey('planets.id'))
+    starship_id = Column(Integer, ForeignKey('starships.id'))
+
    
     
     
