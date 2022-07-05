@@ -10,95 +10,80 @@ Base = declarative_base()
 
 class User(Base):
     __tablename__ = 'user'
-
-    id = Column(Integer, primary_key=True)
-    email = Column(String(120), unique=True, nullable=False)
-    password = Column(String(80), unique=True, nullable=False)
-
-    favorites = relationship("Favorite", backref = "user")
-
-   
-
-class People(Base):
-    __tablename__ = 'people'
     # Here we define columns for the table person
     # Notice that each column is also a normal Python instance attribute.
     id = Column(Integer, primary_key=True)
     name = Column(String(250), nullable=False)
-    height = Column(Integer)
-    mass = Column(Integer)
-    hair_color = Column(String(30))
-    skin_color = Column(String(15))
-    eye_color = Column(String(15))
-    birth_year = Column(String(10))
-    gender = Column (String(15))
-    homeworld = Column(String(20),ForeignKey('planet.id'))
-    starships = Column(String(30),ForeignKey('starship.id'))
+    last_name = Column(String(250), nullable=False)
+    email = Column(String(50), nullable=False)
 
-    planets = relationship("Planets")
-    favorites = relationship("Favorite", backref = "user")
-    user_id = Column(Integer, ForeignKey('user.id'))
-    planet_id = Column(Integer, ForeignKey('planets.id'))
-    starship_id = Column(Integer, ForeignKey('starships.id'))
 
-     
-class Planets(Base):
-    __tablename__ = 'planets'
-   
+class Post(Base):
+    __tablename__ = 'post'
+    # Here we define columns for the table address.
+    # Notice that each column is also a normal Python instance attribute.
     id = Column(Integer, primary_key=True)
-    name = Column(String(250), nullable=False)
-    diameter = Column(String(250))
-    population = Column(String(250), )
-    climate = Column(String(50))
-    water = Column (String(40))
-
-    people = relationship("People")
-    favorites = relationship("Favorite", backref = "planets")
+    image = Column(String(250))
     user_id = Column(Integer, ForeignKey('user.id'))
-    people_id = Column(Integer, ForeignKey('people.id'))
-    starship_id = Column(Integer, ForeignKey('starships.id'))
+    date = Column(String(20))
+    likes_id = Column(Integer, ForeignKey('person.id'))
+    comments_id = Column(Integer, ForeignKey('comments.id'))
+    inbox_id = Column(Integer, ForeignKey('inbox.id'))
 
 
-class Starships(Base):
-    __tablename__ = 'starships'
+class Notifications(Base):
+    __tablename__ = 'notifications'
 
     id = Column(Integer, primary_key=True)
-    name = Column (String(40))
-    model = Column(String(40))
-    manufacturer = Column(String(50))
-    cost_in_credits = Column(Integer)
-    lenght = Column(Integer)
-    max_atmosphering_speed = Column (Integer)
-    crew = Column(Integer)
-    passengers = Column(Integer)
-    cargo_capacity = Column(Integer)
-    consumables = Column(String(40))
-    hyperdrive_rating = Column(Integer)
-
-    people = relationship("People")
-    favorites = relationship("Favorite", backref = "starships")
+    comment_id = Column(Integer, ForeignKey('comment.id'))
+    date = Column(String(20))
+    follower_id = Column(Integer, ForeignKey('follower.id'))
+    follow_request = Column(Integer)
     user_id = Column(Integer, ForeignKey('user.id'))
-    people_id = Column(Integer, ForeignKey('people.id'))
-    planet_id = Column(Integer, ForeignKey('planets.id'))
 
-
-class Favourites(Base) :
-    __tablename__="favorite"
+class Comments(Base):
+    __tablename__ = 'comments'
 
     id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, ForeignKey('user.id'))
-    people_id = Column(Integer, ForeignKey('people.id'))
-    planet_id = Column(Integer, ForeignKey('planets.id'))
-    starship_id = Column(Integer, ForeignKey('starships.id'))
+    text = Column(String(300))
+    likes_id =  Column(Integer, ForeignKey('likes.id'))
 
-   
+class Like(Base):
+    __tablename__ = 'like'
+
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey('user.id')) 
+
+
+class Message(Base):
+    __tablename__ = 'message'
+
+    id = Column(Integer, primary_key=True)
+    likes_id =  Column(Integer, ForeignKey('likes.id'))
+    text = Column(String(300))
+    image = Column(String(250))
+    emojis = Column(String(25))
+    gifs = Column(String(250))
+    histories_id = Column(Integer, ForeignKey('histories.id')) 
+    posts_id = Column(Integer, ForeignKey('post.id')) 
     
+class Follower(Base):
+    __tablename__ = 'followers'
+
+    id = Column(Integer, primary_key=True)
+    date = Column(String(20))
+    user_id = Column(Integer, ForeignKey('user.id'))
+
+
     
-
-
 
     def to_dict(self):
         return {}
 
 ## Draw from SQLAlchemy base
-render_er(Base, 'diagram.png')
+try:
+    result = render_er(Base, 'diagram.png')
+    print("Success! Check the diagram.png file")
+except Exception as e:
+    print("There was a problem genering the diagram")
+    raise e
